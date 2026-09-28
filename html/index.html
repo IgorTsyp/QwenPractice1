@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>проект с джаваскриптом</title>
+</head>
+<body>
+    <p id="statustxt">...</p>
+    <form id="form">
+        <label for="country">Введите название страны</label>
+        <input id="country" type="country">
+        <label for="triplength">Введите продолжительность поездки в днязх</label>
+        <input id="triplength" type="triplength">
+        <button id="button" type="submit">узнать столицу</button>
+    </form>
+<script>
+    let form = document.querySelector("#form")
+    let button = document.querySelector("#button")
+    let statustxt = document.querySelector("#statustxt")
+    form.addEventListener("submit", async function(event){
+        event.preventDefault()
+        button.disabled = true
+        statustxt.textContent = "запрос обрабатывается..."
+        let countryName = document.querySelector("#country").value
+        let triplen = document.querySelector("#triplength").value
+        let formData = {"country": countryName, "triplength": triplen}
+        console.log(country, triplen)
+        let data = await fetch("/api/qwen", { // запрос на сервер 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify(formData)
+        })
+        console.log(data)
+    })
+</script>
+</body>
+</html>
