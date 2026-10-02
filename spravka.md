@@ -20,3 +20,7 @@ git add .
 git commit -m “first commit”
 сохранение текущего состояния проекта
 
+Отправка на GitHub
+git add .
+git commit -m "функция"
+git push
