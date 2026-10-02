@@ -24,3 +24,6 @@ git commit -m “first commit”
 git add .
 git commit -m "функция"
 git push
+
+Запуск qwen
+ollama run qwen3:4b-instruct "Привет! Ответь одним словом: работает?"

@@ -1,19 +1,20 @@
-import {createServer} from 'node:http';
-import {readFile} from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { readFile } from 'node:fs/promises';
 import { error } from 'node:console';
+import { type } from 'node:os';
 let HOST = '127.0.0.1'
 let PORT = 3000
 let MODEL = 'qwen3:4b-instruct'
 let PAGE = new URL('./html/index.html', import.meta.url)
 //let SECOND = new URL('./html/page.html', import.meta.url)
-function sendJson(response,status,value) {
-    response.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
+function sendJson(response, status, value) {
+    response.writeHead(status, { 'ContentType': 'application/json; charset=utf-8' });
     response.end(JSON.stringify(value));
 }
 async function readJson(request) {
- const chunks = [];
- for await (const chunk of request) chunks.push(chunk);
- return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+    const chunks = [];
+    for await (const chunk of request) chunks.push(chunk);
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
 }
 
 let server = createServer(async (req, response) => {
@@ -27,7 +28,7 @@ let server = createServer(async (req, response) => {
     //     }
     // }
     if (req.method === 'GET' && req.url === '/ok') {
-        return sendJson(response, 200, {ok: true})
+        return sendJson(response, 200, { ok: true })
     }
     if (req.method === 'GET' && req.url === '/') {
         try {
@@ -41,9 +42,28 @@ let server = createServer(async (req, response) => {
     if (req.method === 'POST' && req.url == '/api/qwen1') {
         let input = await readJson(req)
         console.log(input)
-        return sendJson(response, 200, {ok: true})
+        let qwenreq = `Определи рекомендуемые места для посещения в ${input.country} на ${input.triplength} дней`
+        console.log(qwenreq)
+        let sendqwen = await fetch("http://127.0.0.1:11434/api/chat", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: MODEL,
+                stream: false,
+                format: 'json',
+                messages: [{ role: 'user', content: qwenreq }],
+            }),
+            signal: AbortSignal.timeout(120_000),
+        })
+
+        if (sendqwen.ok === true){
+            console.log("Ответ выведен")
+        } else {
+            console.log("???")
+        }
+        return sendJson(response, 200, { ok: true })
     }
 })
-server.listen(PORT, HOST, function(){
+server.listen(PORT, HOST, function () {
     console.log("I am ready!!!")
 })
