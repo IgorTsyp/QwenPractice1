@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { error } from 'node:console';
+import { error, log } from 'node:console';
 import { type } from 'node:os';
 let HOST = '127.0.0.1'
 let PORT = 3000
@@ -61,6 +61,9 @@ let server = createServer(async (req, response) => {
         } else {
             console.log("???")
         }
+        let qwenData = sendqwen.json();
+        let result = JSON.parse( qwenData.message.content )
+        console.log(result)
         return sendJson(response, 200, { ok: true })
     }
 })
