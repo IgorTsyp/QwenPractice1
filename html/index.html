@@ -32,7 +32,8 @@
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify(formData)
         })
-        console.log(data)
+        let answer = await data.json()
+        console.log(answer)
     })
 </script>
 </body>
