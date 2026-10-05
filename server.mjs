@@ -61,9 +61,10 @@ let server = createServer(async (req, response) => {
         } else {
             console.log("???")
         }
-        let qwenData = sendqwen.json();
-        let result = JSON.parse( qwenData.message.content )
-        console.log(result)
+        let qwenData = await sendqwen.json();
+        console.log(qwenData)
+        // let result = JSON.parse( qwenData.message.content )
+        // console.log(result)
         return sendJson(response, 200, { ok: true })
     }
 })
