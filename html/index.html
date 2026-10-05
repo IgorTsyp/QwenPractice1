@@ -14,7 +14,7 @@
         <input id="triplength" type="triplength">
         <button id="button" type="submit">узнать столицу</button>
     </form>
-    <p id="qwenmes"></p>
+    <pre id="qwenmes"></pre>
 <script>
     let form = document.querySelector("#form")
     let button = document.querySelector("#button")
@@ -34,6 +34,10 @@
         })
         let answer = await data.json()
         console.log(answer)
+        let pre = document.querySelector("#qwenmes")
+        pre.textContent = answer.days.map((day) =>
+          `День ${day.day}\nУтро: ${day.morning.join(', ')}\nДень: ${day.afternoon.join(', ')}\nВечер: ${day.evening.join(', ')}`
+        ).join('\n\n');
     })
 </script>
 </body>

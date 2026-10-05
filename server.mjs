@@ -42,7 +42,7 @@ let server = createServer(async (req, response) => {
     if (req.method === 'POST' && req.url == '/api/qwen1') {
         let input = await readJson(req)
         console.log(input)
-        let qwenreq = `Определи рекомендуемые места для посещения в ${input.country} на ${input.triplength} дней. Верни только JSON вида {"days":[{"day":1,"morning":["место"],"afternoon":["место"],"evening":["место"]}]}. Нужны ровно ${input.days} дней, пронумерованных по порядку.`
+        let qwenreq = `Определи рекомендуемые места для посещения в ${input.country} на ${input.triplength} дней. Верни только JSON вида {"days":[{"day":1,"morning":["место"],"afternoon":["место"],"evening":["место"]}]}. Нужны ровно ${input.triplength} дней, пронумерованных по порядку.`
         // console.log(qwenreq)
         let sendqwen = await fetch("http://127.0.0.1:11434/api/chat", {
             method: 'POST',
@@ -65,7 +65,7 @@ let server = createServer(async (req, response) => {
         console.log(qwenData)
         // let result = JSON.parse( qwenData.message.content )
         // console.log(result)
-        return sendJson(response, 200, { ok: true, qwenData: qwenData })
+        return sendJson(response, 200, { ok: true, qwenData: qwenData.message.content })
     }
 })
 server.listen(PORT, HOST, function () {
