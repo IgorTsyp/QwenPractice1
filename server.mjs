@@ -65,7 +65,7 @@ let server = createServer(async (req, response) => {
         console.log(qwenData)
         // let result = JSON.parse( qwenData.message.content )
         // console.log(result)
-        return sendJson(response, 200, { ok: true })
+        return sendJson(response, 200, { ok: true, qwenData: qwenData })
     }
 })
 server.listen(PORT, HOST, function () {

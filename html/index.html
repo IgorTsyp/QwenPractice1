@@ -14,6 +14,7 @@
         <input id="triplength" type="triplength">
         <button id="button" type="submit">узнать столицу</button>
     </form>
+    <p id="qwenmes"></p>
 <script>
     let form = document.querySelector("#form")
     let button = document.querySelector("#button")
@@ -25,7 +26,7 @@
         let countryName = document.querySelector("#country").value
         let triplen = document.querySelector("#triplength").value
         let formData = {"country": countryName, "triplength": triplen}
-        console.log(country, triplen)
+        // console.log(country, triplen)
         let data = await fetch("/api/qwen1", { // запрос на сервер 
             method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
