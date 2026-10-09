@@ -1,45 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>проект с джаваскриптом</title>
+    <title>План поездки</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@2.0.0-alpha.1/dist/leaflet.css"
+        integrity="sha256-P+hWJNlpL+GBSRYC7cdsDbQH91URmpDeOzLp7DbFRtE=" crossorigin="" />
+    <script type="importmap">
+        {
+            "imports": {
+                "leaflet": "https://cdn.jsdelivr.net/npm/leaflet@2.0.0-alpha.1/dist/leaflet.js"
+            },
+            "integrity": {
+                "https://cdn.jsdelivr.net/npm/leaflet@2.0.0-alpha.1/dist/leaflet.js": "sha256-gj5JhNAaMi6LCs+jVFOk8sXDe1sWSS2Zlc87m+trLiQ="
+            }
+        }
+ </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-    <p id="statustxt">...</p>
-    <form id="form">
-        <label for="country">Введите название страны</label>
-        <input id="country" type="country">
-        <label for="triplength">Введите продолжительность поездки в днязх</label>
-        <input id="triplength" type="triplength">
-        <button id="button" type="submit">узнать столицу</button>
-    </form>
-    <p id="qwenmes"></p>
-<script>
-    let form = document.querySelector("#form")
-    let button = document.querySelector("#button")
-    let statustxt = document.querySelector("#statustxt")
-    form.addEventListener("submit", async function(event){
-        event.preventDefault()
-        button.disabled = true
-        statustxt.textContent = "запрос обрабатывается..."
-        let countryName = document.querySelector("#country").value
-        let triplen = document.querySelector("#triplength").value
-        let formData = {"country": countryName, "triplength": triplen}
-        // console.log(country, triplen)
-        let data = await fetch("/api/qwen1", { // запрос на сервер 
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify(formData)
+
+<body class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
+
+        <!-- Заголовок -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                План поездки
+            </h1>
+
+            <p class="text-gray-500">
+                Введите страну и продолжительность поездки
+            </p>
+        </div>
+
+        <!-- Статус -->
+        <p id="statustxt" class="text-center text-gray-500 mb-6">
+            ...
+        </p>
+
+        <!-- Форма -->
+        <form id="form" class="space-y-6">
+
+            <!-- Страна -->
+            <div>
+                <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
+                    Введите название страны
+                </label>
+
+                <input id="country" type="text" placeholder="Например: Италия" class="w-full px-4 py-3 border border-gray-300 rounded-lg
+                           focus:outline-none focus:ring-2 focus:ring-blue-500
+                           focus:border-blue-500 transition">
+            </div>
+
+            <!-- Продолжительность -->
+            <div>
+                <label for="triplength" class="block text-sm font-medium text-gray-700 mb-2">
+                    Продолжительность поездки (дни)
+                </label>
+
+                <input id="triplength" type="number" min="1" placeholder="Например: 5" class="w-full px-4 py-3 border border-gray-300 rounded-lg
+                           focus:outline-none focus:ring-2 focus:ring-blue-500
+                           focus:border-blue-500 transition">
+            </div>
+
+            <!-- Кнопка -->
+            <button id="button" type="submit" class="w-full bg-blue-600 text-white font-semibold
+                       py-3 px-4 rounded-lg
+                       hover:bg-blue-700
+                       active:bg-blue-800
+                       disabled:bg-gray-400
+                       transition duration-200
+                       cursor-pointer">
+                Составить план поездки
+            </button>
+
+        </form>
+
+        <!-- Результат -->
+        <div class="mt-8">
+
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                Ваш план поездки
+            </h2>
+
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+
+                <pre id="qwenmes" class="whitespace-pre-wrap text-gray-700
+                           text-sm leading-7 font-sans"></pre>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="map" class="width500"></div>
+
+    <script>
+        let map = L.map("map").setView([20, 0], 2);
+        L.TileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "© OpenStreetMap"
+        }).addTo(map)
+
+        let markers = L.layerGroup().addTo(map)
+
+        async function geocode(place, country) {
+            let url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q="
+                + encodeURIComponent(place + ", " + country)
+            let res = await fetch(url, { headers: { "Accept-Language": "ru" } })
+            let found = await res.json()
+            if (found.length === 0) return null       // место не нашлось
+            return { lat: +found[0].lat, lon: +found[0].lon }
+        }
+
+        // async function test() {
+        //         let result = await geocode("Burj Khalifa", "United Arab Emirates");
+        //         console.log(result);
+        //     }
+
+        //     test();
+
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+    </script>
+
+
+    <script>
+        let form = document.querySelector("#form")
+        let button = document.querySelector("#button")
+        let statustxt = document.querySelector("#statustxt")
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault()
+
+            button.disabled = true
+            statustxt.textContent = "запрос обрабатывается..."
+
+            let countryName = document.querySelector("#country").value
+            let triplen = document.querySelector("#triplength").value
+
+            let formData = {
+                "country": countryName,
+                "triplength": triplen
+            }
+
+            let data = await fetch("/api/qwen1", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+
+            let answer = await data.json()
+            let plan = JSON.parse(answer.qwenData)
+
+            console.log(plan)
+
+            let pre = document.querySelector("#qwenmes")
+
+            pre.textContent = plan.days.map((day) =>
+                `День ${day.day}
+Утро: ${day.morning.join(', ')}
+День: ${day.afternoon.join(', ')}
+Вечер: ${day.evening.join(', ')}`
+            ).join('\n\n')
         })
-        let answer = await data.json()
-        let plan = JSON.parse(answer.qwenData)
-        console.log(plan)
-        let pre = document.querySelector("#qwenmes")
-        pre.textContent = plan.days.map((day) =>
-          `День ${day.day}\nУтро: ${day.morning.join(', ')}\nДень: ${day.afternoon.join(', ')}\nВечер: ${day.evening.join(', ')}`
-        ).join('\n\n');
-    })
-</script>
+            statustxt.textContent = "Ищем ваше место..."
+            markers.clearLayers()
+
+            let points = []
+
+            for (let day of plan.days) {
+                let places = [...day.morning, ...day.afternoon, ...day.evening]
+                console.log(places)
+            }
+
+    </script>
+
+
 </body>
+
 </html>
