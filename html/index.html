@@ -108,7 +108,7 @@
         }
 
         // async function test() {
-        //         let result = await geocode("Burj Khalifa", "United Arab Emirates");
+        //         let result = await geocode("Burj Khalifa", countryName);
         //         console.log(result);
         //     }
 
@@ -148,7 +148,6 @@
             let answer = await data.json()
             let plan = JSON.parse(answer.qwenData)
 
-            console.log(plan)
 
             let pre = document.querySelector("#qwenmes")
 
@@ -162,11 +161,39 @@
             markers.clearLayers()
 
             let points = []
+            console.log(plan)
 
+            //  async function test() {
+            //     let result = await geocode("Burj Khalifa", countryName);
+            //     console.log(result);
+            // }
+
+            // test();
+
+            let all_places = []
+            let coords = []
             for (let day of plan.days) {
                 let places = [...day.morning, ...day.afternoon, ...day.evening]
-                console.log(places)
+                all_places.push(...places)
+                // console.log(places)
             }
+            console.log(all_places)
+            for (let place of all_places) {
+                console.log(place, countryName)
+                let result = await geocode(place, countryName);
+                coords.push(result) 
+            }
+            console.log(coords)
+            let coords2 = []
+            for (let coord of coords) {
+                if (coord) {
+                    coords2.push(coords)
+                }
+            }
+            console.log(coords2)
+            // let result = await geocode("Burj Khalifa", "ОАЭ");
+            let result = await geocode("Palm Beach", "ОАЭ");
+                console.log(result);
         })
             
 
