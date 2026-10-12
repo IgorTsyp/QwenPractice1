@@ -178,22 +178,30 @@
                 // console.log(places)
             }
             console.log(all_places)
-            for (let place of all_places) {
-                console.log(place, countryName)
-                let result = await geocode(place, countryName);
-                coords.push(result) 
-            }
-            console.log(coords)
             let coords2 = []
-            for (let coord of coords) {
-                if (coord) {
-                    coords2.push(coords)
+            for (let place of all_places) {
+                let result = await geocode(place, countryName);
+                if (result) {
+                    coords2.push({place:place, lat: result.lat, lon: result.lon}) 
                 }
+                await sleep(1000);
+                console.log(place, countryName)
+                
             }
             console.log(coords2)
-            // let result = await geocode("Burj Khalifa", "ОАЭ");
-            let result = await geocode("Palm Beach", "ОАЭ");
-                console.log(result);
+            markers.clearLayers()
+            for (let point of coords2) {
+                L.marker([point.lat, point.lon])
+                    .bindPopup(point.place)
+                    .addTo(markers)
+            }
+            
+            
+            let bounds = L.latLngBounds(coords2.map((p) => [p.lat, p.lon]))
+            map.fitBounds(bounds, { padding: [30, 30] })
+
+            statustxt.textContent = 'Найдено мест' + coords2.length
+            button.disabled = false
         })
             
 
