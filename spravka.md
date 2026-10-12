@@ -27,3 +27,6 @@ git push
 
 Запуск qwen
 ollama run qwen3:4b-instruct "Привет! Ответь одним словом: работает?"
+
+Коммит:
+git commit -am "update"; if ($?) { git push }
