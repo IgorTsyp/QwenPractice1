@@ -158,9 +158,9 @@
 
             pre.textContent = plan.days.map((day) =>
                 `День ${day.day}
-Утро: ${day.morning.join(', ')}
-День: ${day.afternoon.join(', ')}
-Вечер: ${day.evening.join(', ')}`
+Утро: ${(day.morning ?? []).join(', ')}
+День: ${(day.afternoon ?? []).join(', ')}
+Вечер: ${(day.evening ?? []).join(', ')}`
             ).join('\n\n')
         statustxt.textContent = "Ищем ваше место..."
             markers.clearLayers()

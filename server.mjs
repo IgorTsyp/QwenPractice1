@@ -4,7 +4,7 @@ import { error, log } from 'node:console';
 import { type } from 'node:os';
 let HOST = '127.0.0.1'
 let PORT = 3000
-let MODEL = 'qwen3:4b-instruct'
+let MODEL = 'qwen3:14b'
 let PAGE = new URL('./html/index.html', import.meta.url)
 //let SECOND = new URL('./html/page.html', import.meta.url)
 function sendJson(response, status, value) {
