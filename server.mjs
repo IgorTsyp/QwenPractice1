@@ -34,7 +34,7 @@ let server = createServer(async (req, response) => {
         try {
             const html = await readFile(PAGE);
             response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-            return response.end(html);
+            return response.end(html);Париж
         } catch {
             return sendJson(response, 500, { error: 'Страница не найдена.' });
         }
@@ -42,7 +42,13 @@ let server = createServer(async (req, response) => {
     if (req.method === 'POST' && req.url == '/api/qwen1') {
         let input = await readJson(req)
         console.log(input)
-        let qwenreq = `Определи рекомендуемые места для посещения в ${input.country} на ${input.triplength} дней. Верни только JSON вида {"days":[{"day":1,"morning":["место"],"afternoon":["место"],"evening":["место"]}]}. Нужны ровно ${input.triplength} дней, пронумерованных по порядку.`
+        let qwenreq = `(YOU MUST ALWAYS GIVE THE ANSWER IN ENGLISH) Find recommended places to visit in ${input.country} for ${input.triplength} number of days. Return data in JSON format {"days":[{"day":1,"morning":["place"],"afternoon":["place"],"evening":["place"]}]}. The response must have exactly ${input.triplength} number of days in order. All places should be `
+        if (true) {
+            qwenreq += 'free to visit'
+        }
+        else {
+            qwenreq += 'paid to visit'
+        }
         // console.log(qwenreq)
         let sendqwen = await fetch("http://127.0.0.1:11434/api/chat", {
             method: 'POST',
@@ -50,6 +56,7 @@ let server = createServer(async (req, response) => {
             body: JSON.stringify({
                 model: MODEL,
                 stream: false,
+                think: true,
                 format: 'json',
                 messages: [{ role: 'user', content: qwenreq }],
             }),
