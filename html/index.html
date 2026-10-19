@@ -149,10 +149,22 @@
 
             let countryName = document.querySelector("#country").value
             let triplen = document.querySelector("#triplength").value
+            let price1 = document.querySelector("#price1").checked;
+            let price2 = document.querySelector("#price2").checked;
+            let budget = ""
+            if (price1) {
+                console.log("Выбрана первая кнопка")
+                budget = "free"
+            } else if (price2) {
+                console.log("Выбрана вторая кнопка")
+                budget = "paid"
+            }
+            
 
             let formData = {
                 "country": countryName,
-                "triplength": triplen
+                "triplength": triplen,
+                "budget" : budget
             }
 
             let data = await fetch("/api/qwen1", {

@@ -39,11 +39,11 @@ let server = createServer(async (req, response) => {
             return sendJson(response, 500, { error: 'Страница не найдена.' });
         }
     }
-    if (req.method === 'POST' && req.url == '/api/qwen1') {
+    if (req.method === 'POST' && req.url === '/api/qwen1') {
         let input = await readJson(req)
         console.log(input)
         let qwenreq = `(YOU MUST ALWAYS GIVE THE ANSWER IN ENGLISH) Find recommended places to visit in ${input.country} for ${input.triplength} number of days. Return data in JSON format {"days":[{"day":1,"morning":["place"],"afternoon":["place"],"evening":["place"]}]}. The response must have exactly ${input.triplength} number of days in order. All places should be `
-        if (true) {
+        if (input.budget === "free") {
             qwenreq += 'free to visit'
         }
         else {
