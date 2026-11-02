@@ -123,6 +123,7 @@
     </div>
 
     <div id="map" class="h-96 w-full rounded-lg border border-gray-200"></div>
+    <div><img src="" id="wiki"></div>
 
     <script>
         async function getPlaceImage(name, lang = 'en') {
@@ -230,7 +231,7 @@
         let plan = JSON.parse(answer.qwenData);
 
         let container = document.querySelector("#qwenmes");
-
+        console.log("123")
         container.innerHTML = plan.days.map((day) => `
             <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
                 
@@ -247,7 +248,7 @@
                                 ${(day.morning ?? []).join(", ") || "Нет запланированных мероприятий"}
                             </p>
                             <div class="imagePlace">
-                                <img src="${(await getPlaceImage(name))}">
+                                <img src="">
                             </div>
                         </div>
                     </div>
@@ -312,6 +313,10 @@
                 L.marker([point.lat, point.lon])
                     .bindPopup(point.place)
                     .addTo(markers)
+                const r = await getPlaceImage(point.place)
+
+                console.log(r.src)
+                document.querySelector("#wiki").src = r.src
             }
             
             
