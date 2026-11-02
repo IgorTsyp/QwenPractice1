@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wiki Image Test</title>
+<style>
+  body { font-family: sans-serif; max-width: 700px; margin: 30px auto; padding: 0 16px; }
+  input { width: 70%; padding: 6px; }
+  button { padding: 6px 12px; }
+  img { max-width: 100%; margin-top: 12px; }
+  pre { background: #f4f4f4; padding: 8px; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+</style>
+</head>
+<body>
+<h1>Wikipedia image test</h1>
+<input id="q" value="Red Square">
+<button id="go">Search</button>
+<div id="result"></div>
+
+<script>
+async function getPlaceImage(name, lang = 'en') {
+  const url = `https://${lang}.wikipedia.org/w/api.php?` + new URLSearchParams({
+    action: 'query',
+    generator: 'search',
+    gsrsearch: name,
+    gsrlimit: 1,
+    prop: 'pageimages',
+    piprop: 'thumbnail',
+    pithumbsize: 600,
+    format: 'json',
+    origin: '*'
+  });
+  const data = await (await fetch(url)).json();
+  const page = data.query && Object.values(data.query.pages)[0];
+  return { url, title: page?.title, src: page?.thumbnail?.source || null };
+}
+
+async function run() {
+  const name = document.getElementById('q').value.trim();
+  const out = document.getElementById('result');
+  out.textContent = 'Loading...';
+  try {
+    const r = await getPlaceImage(name);
+    out.innerHTML =`<p> Article: <b>${r.title ?? 'not found'}</b></p>`
+      + (r.src ? `<img src="${r.src}" alt="${name}"><pre>${r.src}</pre>` : '<p>No image</p>')
+      + `<p>Request:</p><pre>${r.url}</pre>`;
+  } catch (e) {
+    out.textContent = 'Error: ' + e.message;
+  }
+}
+
+document.getElementById('go').onclick = run;
+run();
+</script>
+</body>
+</html>
