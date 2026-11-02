@@ -143,6 +143,13 @@
         return { url, title: page?.title, src: page?.thumbnail?.source || null };
         }
 
+        function placeImages(places) {
+            return `<div class = ""` +
+                (places).map((place) => `
+                <img class = "place-img"
+                `).join("") + `</div>`
+        }
+
         async function run() {
         const name = document.getElementById('q').value.trim();
         const out = document.getElementById('result');
@@ -247,9 +254,7 @@
                             <p class="text-sm text-gray-600 leading-6">
                                 ${(day.morning ?? []).join(", ") || "Нет запланированных мероприятий"}
                             </p>
-                            <div class="imagePlace">
-                                <img src="">
-                            </div>
+                            ${placeImages(day.morning)}
                         </div>
                     </div>
 
@@ -260,6 +265,7 @@
                             <p class="text-sm text-gray-600 leading-6">
                                 ${(day.afternoon ?? []).join(", ") || "Нет запланированных мероприятий"}
                             </p>
+                            ${placeImages(day.afternoon)}
                         </div>
                     </div>
 
@@ -270,11 +276,18 @@
                             <p class="text-sm text-gray-600 leading-6">
                                 ${(day.evening ?? []).join(", ") || "Нет запланированных мероприятий"}
                             </p>
+                            ${placeImages(day.evening)}
                         </div>
                     </div>
                 </div>
             </div>
         `).join("");
+
+        statustxt.textContent = "Загружаем картинки..."
+        for (let img of container.querySelectorAll(".place-img")) {
+            let r = await getPlaceImage(img.dataset.place)
+            img.src = r.src
+        }
 
         statustxt.textContent = "Ищем ваше место..."
             markers.clearLayers()
@@ -313,10 +326,10 @@
                 L.marker([point.lat, point.lon])
                     .bindPopup(point.place)
                     .addTo(markers)
-                const r = await getPlaceImage(point.place)
+                // const r = await getPlaceImage(point.place)
 
-                console.log(r.src)
-                document.querySelector("#wiki").src = r.src
+                // console.log(r.src)
+                // document.querySelector("#wiki").src = r.src
             }
             
             
