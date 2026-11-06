@@ -11,9 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         .width500 {
-    height: 500px;
-    }
-
+            height: 500px;
+        }
     </style>
 </head>
 
@@ -61,37 +60,34 @@
                            focus:outline-none focus:ring-2 focus:ring-blue-500
                            focus:border-blue-500 transition">
             </div>
-            
-             
-<div class="space-y-2">
-    <p class="text-sm font-medium text-gray-700">
-        Стоимость достопримечательностей
-    </p>
 
-    <div class="flex gap-6">
-        <label for="price1" class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
-            <input
-                id="price1"
-                name="price"
-                type="radio"
-                value="free"
-                class="h-4 w-4 accent-blue-600 focus:ring-2 focus:ring-blue-500"
-            >
-            Free
-        </label>
 
-        <label for="price2" class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
-            <input
-                id="price2"
-                name="price"
-                type="radio"
-                value="paid"
-                class="h-4 w-4 accent-blue-600 focus:ring-2 focus:ring-blue-500"
-            >
-            Paid
-        </label>
-    </div>
-</div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-gray-700">
+                    Стоимость достопримечательностей
+                </p>
+
+
+                <div class="flex gap-6">
+                    <label for="price3" class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                        <input id="price3" name="price" type="radio" value="free"
+                            class="h-4 w-4 accent-blue-600 focus:ring-2 focus:ring-blue-500">
+                        No preference 
+                    </label>
+
+                    <label for="price1" class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                        <input id="price1" name="price" type="radio" value="free"
+                            class="h-4 w-4 accent-blue-600 focus:ring-2 focus:ring-blue-500">
+                        Free 🆓
+                    </label>
+
+                    <label for="price2" class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                        <input id="price2" name="price" type="radio" value="paid"
+                            class="h-4 w-4 accent-blue-600 focus:ring-2 focus:ring-blue-500">
+                        Paid 💰
+                    </label>
+                </div>
+            </div>
 
 
             <!-- Кнопка -->
@@ -108,39 +104,40 @@
         </form>
 
         <!-- Результат -->
-            
+
         <div class="mt-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">
                 Ваш план поездки
             </h2>
 
-            <div id="qwenmes" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            </div>
-        </div>
-
+            <div id="qwenmes" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <h2 class="text-xl font-semibold text-gray-800 mt-4 mb-4">
+                Места на карте
+            </h2>
+            <div id="map" class="h-96 w-full rounded-lg border border-gray-200"></div>
         </div>
 
     </div>
 
-    <div id="map" class="h-96 w-full rounded-lg border border-gray-200"></div>
-    <div><img src="" id="wiki"></div>
+    </div>
+
 
     <script>
         async function getPlaceImage(name, lang = 'en') {
-        const url = `https://${lang}.wikipedia.org/w/api.php?` + new URLSearchParams({
-            action: 'query',
-            generator: 'search',
-            gsrsearch: name,
-            gsrlimit: 1,
-            prop: 'pageimages',
-            piprop: 'thumbnail',
-            pithumbsize: 600,
-            format: 'json',
-            origin: '*'
-        });
-        const data = await (await fetch(url)).json();
-        const page = data.query && Object.values(data.query.pages)[0];
-        return { url, title: page?.title, src: page?.thumbnail?.source || null };
+            const url = `https://${lang}.wikipedia.org/w/api.php?` + new URLSearchParams({
+                action: 'query',
+                generator: 'search',
+                gsrsearch: name,
+                gsrlimit: 1,
+                prop: 'pageimages',
+                piprop: 'thumbnail',
+                pithumbsize: 600,
+                format: 'json',
+                origin: '*'
+            });
+            const data = await (await fetch(url)).json();
+            const page = data.query && Object.values(data.query.pages)[0];
+            return { url, title: page?.title, src: page?.thumbnail?.source || null };
         }
 
         function placeImages(places) {
@@ -152,17 +149,17 @@
         }
 
         async function run() {
-        const name = document.getElementById('q').value.trim();
-        const out = document.getElementById('result');
-        out.textContent = 'Loading...';
-        try {
-            const r = await getPlaceImage(name);
-            out.innerHTML =`<p> Article: <b>${r.title ?? 'not found'}</b></p>`
-            + (r.src ? `<img src="${r.src}" alt="${name}"><pre>${r.src}</pre>` : '<p>No image</p>')
-            + `<p>Request:</p><pre>${r.url}</pre>`;
-        } catch (e) {
-            out.textContent = 'Error: ' + e.message;
-        }
+            const name = document.getElementById('q').value.trim();
+            const out = document.getElementById('result');
+            out.textContent = 'Loading...';
+            try {
+                const r = await getPlaceImage(name);
+                out.innerHTML = `<p> Article: <b>${r.title ?? 'not found'}</b></p>`
+                    + (r.src ? `<img src="${r.src}" alt="${name}"><pre>${r.src}</pre>` : '<p>No image</p>')
+                    + `<p>Request:</p><pre>${r.url}</pre>`;
+            } catch (e) {
+                out.textContent = 'Error: ' + e.message;
+            }
         }
 
     </script>
@@ -210,20 +207,20 @@
             let triplen = document.querySelector("#triplength").value
             let price1 = document.querySelector("#price1").checked;
             let price2 = document.querySelector("#price2").checked;
+            let price3 = document.querySelector("#price3").checked;
             let budget = ""
             if (price1) {
-                console.log("Выбрана первая кнопка")
                 budget = "free"
             } else if (price2) {
-                console.log("Выбрана вторая кнопка")
                 budget = "paid"
+            } else if (price3) {
+                budget = "nopref"
             }
-            
 
             let formData = {
                 "country": countryName,
                 "triplength": triplen,
-                "budget" : budget
+                "budget": budget
             }
 
             let data = await fetch("/api/qwen1", {
@@ -234,13 +231,12 @@
                 body: JSON.stringify(formData)
             })
 
-            
-        let answer = await data.json();
-        let plan = JSON.parse(answer.qwenData);
 
-        let container = document.querySelector("#qwenmes");
-        console.log("123")
-        container.innerHTML = plan.days.map((day) => `
+            let answer = await data.json();
+            let plan = JSON.parse(answer.qwenData);
+
+            let container = document.querySelector("#qwenmes");
+            container.innerHTML = plan.days.map((day) => `
             <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
                 
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">
@@ -284,17 +280,17 @@
             </div>
         `).join("");
 
-        statustxt.textContent = "Загружаем картинки..."
-        for (let img of container.querySelectorAll(".place-img")) {
-            let r = await getPlaceImage(img.dataset.place)
-            img.src = r.src
-        }
+            statustxt.textContent = "Загружаем картинки..."
+            for (let img of container.querySelectorAll(".place-img")) {
+                let r = await getPlaceImage(img.dataset.place)
+                img.src = r.src
+            }
 
-        statustxt.textContent = "Ищем ваше место..."
+            statustxt.textContent = "Ищем ваше место..."
             markers.clearLayers()
 
             let points = []
-            console.log(plan)
+            console.log("План от Qwen:", plan)
 
             //  async function test() {
             //     let result = await geocode("Burj Khalifa", countryName);
@@ -312,16 +308,19 @@
             }
             console.log(all_places)
             let coords2 = []
+            console.log("Теперь определяем GeoCode:")
             for (let place of all_places) {
                 let result = await geocode(place, countryName);
                 if (result) {
-                    coords2.push({place:place, lat: result.lat, lon: result.lon}) 
+                    coords2.push({ place: place, lat: result.lat, lon: result.lon })
+                } else {
+                    console.log('Координаты не найдены для места', place)
                 }
                 await sleep(1000);
                 console.log(place, countryName)
-                
+
             }
-            console.log(coords2)
+            console.log("Список найденых мест на карте:", coords2)
             markers.clearLayers()
             for (let point of coords2) {
                 L.marker([point.lat, point.lon])
@@ -332,15 +331,15 @@
                 // console.log(r.src)
                 // document.querySelector("#wiki").src = r.src
             }
-            
-            
+
+
             let bounds = L.latLngBounds(coords2.map((p) => [p.lat, p.lon]))
             map.fitBounds(bounds, { padding: [30, 30] })
 
             statustxt.textContent = 'Найдено мест' + coords2.length
             button.disabled = false
         })
-            
+
 
     </script>
 

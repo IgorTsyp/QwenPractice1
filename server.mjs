@@ -42,12 +42,16 @@ let server = createServer(async (req, response) => {
     if (req.method === 'POST' && req.url === '/api/qwen1') {
         let input = await readJson(req)
         console.log(input)
-        let qwenreq = `(YOU MUST ALWAYS GIVE THE ANSWER IN ENGLISH) Find recommended places to visit in ${input.country} for ${input.triplength} number of days. Return data in JSON format {"days":[{"day":1,"morning":["place"],"afternoon":["place"],"evening":["place"]}]}. The response must have exactly ${input.triplength} number of days in order. All places should be `
+        let qwenreq = `(YOU MUST ALWAYS GIVE THE ANSWER IN ENGLISH) Find recommended places to visit in ${input.country} for ${input.triplength} number of days. Return ONLY valid JSON in this format: {"days":[{"day":1,"morning":[{"name":"place","cost":"Paid"}],"afternoon":[{"name":"place","cost":"Free"}],"evening":[{"name":"place","cost":"Paid"}]}]}. The response must have exactly ${input.triplength} number of days in order. For each place, the "cost" field must be exactly "Paid" or "Free".`;
+
         if (input.budget === "free") {
-            qwenreq += 'free to visit'
+            qwenreq += 'The pricing must be free to visit'
+        }
+        else if (input.budget === "free") {
+            qwenreq += 'The pricing must be paid to visit'
         }
         else {
-            qwenreq += 'paid to visit'
+            qwenreq += "without preference"
         }
         // console.log(qwenreq)
         let sendqwen = await fetch("http://127.0.0.1:11434/api/chat", {
