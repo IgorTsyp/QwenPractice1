@@ -144,9 +144,10 @@
         }
 
         function placeImages(places) {
-            return `<div class = ""` +
-                (places).map((place) => `
-                <img class = "place-img"
+            return `<div class="flex flex-wrap gap-2 mt-2">` +
+                (places ?? []).map((place) => `
+                <img class="place-img w-24 h-24 object-cover rounded-lg bg-gray-100"
+                     data-place="${place}" alt="${place}" title="${place}">
                 `).join("") + `</div>`
         }
 
