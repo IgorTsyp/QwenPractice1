@@ -259,6 +259,7 @@
 
                     <div class="flex gap-3">
                         <span class="text-xl">☀️</span>
+                        
                         <div>
                             <p class="font-medium text-gray-700">День</p>
                             <p class="text-sm text-gray-600 leading-6">
@@ -315,7 +316,7 @@
             for (let place of all_places) {
                 let result = await geocode(place.name, countryName);
                 if (result) {
-                    coords2.push({ place: place, lat: result.lat, lon: result.lon })
+                    coords2.push({ place: place.name, lat: result.lat, lon: result.lon })
                 } else {
                     console.log('Координаты не найдены для места', place)
                 }
