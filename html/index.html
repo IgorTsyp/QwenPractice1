@@ -318,6 +318,11 @@
                 let result = await geocode(place.name, countryName);
                 if (result) {
                     coords2.push({ place: place.name, lat: result.lat, lon: result.lon })
+                    for (let img of container.querySelectorAll(".place-img")) {
+                        if (img.dataset.place === place.name) {
+                            img.insertAdjacentText("afterend", "📍")
+                        }
+                    }
                 } else {
                     console.log('Координаты не найдены для места', place)
                 }
