@@ -141,10 +141,11 @@
         }
 
         function placeImages(places) {
+            console.log(places)
             return `<div class="flex flex-wrap gap-2 mt-2">` +
                 (places ?? []).map((place) => `
                 <img class="place-img w-24 h-24 object-cover rounded-lg bg-gray-100"
-                     data-place="${place}" alt="${place}" title="${place}">
+                     data-place="${place.name}" alt="${place.name}" title="${place.name}">
                 `).join("") + `</div>`
         }
 
@@ -250,7 +251,7 @@
                         <div>
                             <p class="font-medium text-gray-700">Утро</p>
                             <p class="text-sm text-gray-600 leading-6">
-                                ${(day.morning ?? []).join(", ") || "Нет запланированных мероприятий"}
+                                ${(day.morning ?? []).map(p=>p.name).join(", ") || "Нет запланированных мероприятий"}
                             </p>
                             ${placeImages(day.morning)}
                         </div>
@@ -261,7 +262,7 @@
                         <div>
                             <p class="font-medium text-gray-700">День</p>
                             <p class="text-sm text-gray-600 leading-6">
-                                ${(day.afternoon ?? []).join(", ") || "Нет запланированных мероприятий"}
+                                ${(day.afternoon ?? []).map(p=>p.name).join(", ") || "Нет запланированных мероприятий"}
                             </p>
                             ${placeImages(day.afternoon)}
                         </div>
@@ -272,7 +273,7 @@
                         <div>
                             <p class="font-medium text-gray-700">Вечер</p>
                             <p class="text-sm text-gray-600 leading-6">
-                                ${(day.evening ?? []).join(", ") || "Нет запланированных мероприятий"}
+                                ${(day.evening ?? []).map(p=>p.name).join(", ") || "Нет запланированных мероприятий"}
                             </p>
                             ${placeImages(day.evening)}
                         </div>
@@ -280,6 +281,7 @@
                 </div>
             </div>
         `).join("");
+            
 
             statustxt.textContent = "Загружаем картинки..."
             for (let img of container.querySelectorAll(".place-img")) {
@@ -311,7 +313,7 @@
             let coords2 = []
             console.log("Теперь определяем GeoCode:")
             for (let place of all_places) {
-                let result = await geocode(place, countryName);
+                let result = await geocode(place.name, countryName);
                 if (result) {
                     coords2.push({ place: place, lat: result.lat, lon: result.lon })
                 } else {
