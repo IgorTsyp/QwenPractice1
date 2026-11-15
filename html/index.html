@@ -320,7 +320,14 @@
                     coords2.push({ place: place.name, lat: result.lat, lon: result.lon })
                     for (let img of container.querySelectorAll(".place-img")) {
                         if (img.dataset.place === place.name) {
-                            img.insertAdjacentText("afterend", "📍")
+                        let pin = document.createElement("span");
+                        pin.textContent = '📍';
+                        pin.style.cursor = "pointer";
+                        pin.onclick = function () {
+                            document.querySelector("#map").scrollIntoView({behavior:"smooth"})
+                            map.flyTo([result.lat, result.lon], 18)
+                        }
+                        img.after(pin)
                         }
                     }
                 } else {
