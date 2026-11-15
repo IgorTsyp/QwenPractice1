@@ -42,7 +42,9 @@ let server = createServer(async (req, response) => {
     if (req.method === 'POST' && req.url === '/api/qwen1') {
         let input = await readJson(req)
         console.log(input)
-        let qwenreq = `(YOU MUST ALWAYS GIVE THE ANSWER IN ENGLISH) Find recommended places to visit in ${input.country} for ${input.triplength} number of days. Return ONLY valid JSON in this format: {"days":[{"day":1,"morning":[{"name":"place","cost":"Paid"}],"afternoon":[{"name":"place","cost":"Free"}],"evening":[{"name":"place","cost":"Paid"}]}]}. The response must have exactly ${input.triplength} number of days in order. For each place, the "cost" field must be exactly "Paid" or "Free".`;
+        
+    let qwenreq = `(YOU MUST ALWAYS GIVE THE ANSWER IN ENGLISH) Find recommended places to visit in ${input.country} for ${input.triplength} number of days. Return ONLY valid JSON in this format: {"days":[{"day":1,"morning":[{"name":"place","description":"A brief description of the place and what visitors can experience there, 3-4 sentences.","cost":"Paid"}],"afternoon":[{"name":"place","description":"A brief description of the place and what visitors can experience there, 3-4 sentences.","cost":"Free"}],"evening":[{"name":"place","description":"A brief description of the place and what visitors can experience there, 3-4 sentences.","cost":"Paid"}]}]}. The response must have exactly ${input.triplength} number of days in order. For each place, the "description" field must contain a brief explanation of the place, its main attractions, or what makes it worth visiting. The "cost" field must be exactly "Paid" or "Free".`;
+
 
         if (input.budget === "free") {
             qwenreq += 'The pricing must be free to visit'

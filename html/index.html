@@ -116,11 +116,52 @@
             </h2>
             <div id="map" class="h-96 w-full rounded-lg border border-gray-200"></div>
         </div>
+        
 
     </div>
 
     </div>
 
+    <div id = "modal" class = "hidden">
+        <div id="modal-bg" class="fixed inset-0 z-[2000] bg-black/50 flex items-center justify-center p-4">
+            <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+                <button onclick="closeModal" id="modal-close" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 text-gray-600 text-xl hover:bg-gray-100 cursor-pointer">✕</button>
+                <img id="modal-img" class="w-full h-56 object-cover rounded-t-2xl bg-gray-100">
+                <div class="p-6">
+                    <h3 id="modal-title" class="text-gray-700 leading-7 mt-4"></h3>
+                    <button id="modal-map" class="mt-6 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 cursor-pointer">Показать на карте</button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button type="button" onclick="openModal()">
+        Test
+    </button>
+
+    <script>
+        let placesInfo = {};
+        let modal = document.querySelector("#modal");
+        let modalImg = document.querySelector("#modal-img");
+        
+        function openModal(name, imgSrc) {
+            let place = placesInfo[name]
+
+            // if (imgSrc) {
+            //     modalImg.src = imgSrc
+            //     modalImg.classList.remove("hidden")
+            // } else {
+            //     modalImg.classList.add("hidden")
+            // }
+            modal.classList.remove("hidden")
+        }
+
+        function closeModal() {
+            modal.classList.add("hidden")
+        }
+    </script>
 
     <script>
         async function getPlaceImage(name, lang = 'en') {
@@ -235,6 +276,14 @@
 
             let answer = await data.json();
             let plan = JSON.parse(answer.qwenData);
+            
+            placesInfo = {}
+
+            for (let day of plan.days) {
+                for (let place of [...day.morning, ...day.afternoon, ...day.evening]) {
+                    placesInfo[place.name] = place
+                }
+            }
 
             let container = document.querySelector("#qwenmes");
             container.innerHTML = plan.days.map((day) => `
