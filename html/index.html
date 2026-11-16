@@ -142,19 +142,27 @@
     </button>
 
     <script>
-        let placesInfo = {};
-        let modal = document.querySelector("#modal");
-        let modalImg = document.querySelector("#modal-img");
+        let placesInfo = {}
+        let modal = document.querySelector("#modal")
+        let modalImg = document.querySelector("#modal-img")
+        let modalTitle = document.querySelector("#modal-title")
+        let modalDesc = document.querySelector("#modal-desc")
+        let modalMap = document.querySelector("#modal-map")
+        let modalCost = document.querySelector("#modal-cost")
         
         function openModal(name, imgSrc) {
             let place = placesInfo[name]
+            console.log("placesInfo", placesInfo)
+            modalTitle.textContent = place.name
+            modalCost.textContent = place.cost === "Paid" ? "Not free to visit" : "Free to visit"
+            modalDesc.textContent = place.description
 
-            // if (imgSrc) {
-            //     modalImg.src = imgSrc
-            //     modalImg.classList.remove("hidden")
-            // } else {
-            //     modalImg.classList.add("hidden")
-            // }
+            if (imgSrc) {
+                modalImg.src = imgSrc
+                modalImg.classList.remove("hidden")
+            } else {
+                modalImg.classList.add("hidden")
+            }
             modal.classList.remove("hidden")
         }
 
@@ -336,6 +344,9 @@
 
             statustxt.textContent = "Загружаем картинки..."
             for (let img of container.querySelectorAll(".place-img")) {
+                img.onclick = function() {
+                    openModal(img.dataset.place, img.naturalWidth > 0 ? img.src : null)
+                }
                 let r = await getPlaceImage(img.dataset.place)
                 img.src = r.src
             }
@@ -367,6 +378,7 @@
                 let result = await geocode(place.name, countryName);
                 if (result) {
                     coords2.push({ place: place.name, lat: result.lat, lon: result.lon })
+                    placesInfo[place.name].coords = result
                     for (let img of container.querySelectorAll(".place-img")) {
                         if (img.dataset.place === place.name) {
                         let pin = document.createElement("span");
